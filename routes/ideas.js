@@ -1,10 +1,13 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 
-module.exports = router;
+//Load Idea Model
+require("../models/Idea");
+const Idea = mongoose.model("ideas");
 
 //Idea Index Page
-router.get("/ideas", (req, res) => {
+router.get("/", (req, res) => {
   Idea.find({})
     .sort({ date: "desc" })
     .then(ideas => {
@@ -24,7 +27,7 @@ router.get("/edit/:id", (req, res) => {
   Idea.findOne({
     _id: req.params.id
   }).then(idea => {
-    res.render("/edit", {
+    res.render("ideas/edit", {
       idea: idea
     });
   });
@@ -80,3 +83,5 @@ router.delete("/:id", (req, res) => {
     res.redirect("/ideas");
   });
 });
+
+module.exports = router;

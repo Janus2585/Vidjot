@@ -8,6 +8,10 @@ const mongoose = require("mongoose");
 
 const app = express();
 
+//Load routes
+const ideas = require("./routes/ideas");
+const users = require("./routes/users");
+
 //Map global promise to get rid of the DeprecationWarning
 mongoose.Promise = global.Promise;
 
@@ -16,10 +20,6 @@ mongoose
   .connect("mongodb://localhost/vidjot-dev")
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
-
-//Load Idea Model
-require("./models/Idea");
-const Idea = mongoose.model("ideas");
 
 // Handlebars Middleware
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -65,15 +65,9 @@ app.get("/about", (req, res) => {
   res.render("about");
 });
 
-//User Login Route
-app.get("/users/login", (req, res) => {
-  res.send("login");
-});
-
-//User Register Route
-app.get("/users/register", (req, res) => {
-  res.send("register");
-});
+//Use routes
+app.use("/ideas", ideas);
+app.use("/users", users);
 
 const port = 5000;
 
